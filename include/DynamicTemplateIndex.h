@@ -7,7 +7,7 @@
 #include "Context.h"
 #include "ContextTemplate.h"
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     class DynamicTemplateIndex
     {

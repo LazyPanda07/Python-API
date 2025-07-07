@@ -11,7 +11,7 @@
 
 namespace py = pybind11;
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     class DynamicTemplateIndex;
 

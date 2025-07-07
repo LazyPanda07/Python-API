@@ -4,7 +4,7 @@
 
 #include "Context.h"
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     class ProcessingBlock
     {

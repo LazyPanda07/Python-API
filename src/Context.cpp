@@ -3,7 +3,7 @@
 #include "FacerecService.h"
 #include "DynamicTemplateIndex.h"
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     py::bytes Context::getBytesFromPtr(const Context& context, uint64_t size)
     {

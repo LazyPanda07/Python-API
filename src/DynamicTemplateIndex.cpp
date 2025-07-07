@@ -2,7 +2,7 @@
 
 #include "FacerecService.h"
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     DynamicTemplateIndex::DynamicTemplateIndex(const Context& config) :
         implementation(FacerecService::get()->createDynamicTemplateIndex(*config))

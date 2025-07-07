@@ -1,8 +1,8 @@
 #include "FacerecService.h"
 
-static std::unique_ptr<face_sdk::FacerecService> instance;
+static std::unique_ptr<face_sdk_3divi::FacerecService> instance;
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     FacerecService::FacerecService(const std::string& dllPath, const std::string& confDirectory, const std::string& licenseDirectory) :
         service(pbio::FacerecService::createService(dllPath, confDirectory, licenseDirectory))
@@ -14,7 +14,7 @@ namespace face_sdk
     {
         if (!instance)
         {
-            throw std::runtime_error("Call face_sdk.create_service");
+            throw std::runtime_error("Call face_sdk_3divi.create_service");
         }
 
         return instance->service;

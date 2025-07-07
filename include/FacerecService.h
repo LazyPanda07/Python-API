@@ -5,7 +5,7 @@
 
 #include <pbio/FacerecService.h>
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     class FacerecService
     {

@@ -13,7 +13,7 @@ jobs:
       runs-on: windows-latest
       strategy:
         matrix:
-            python-versions: [3.8, 3.9, 3.10, 3.11, 3.12, 3.13]
+            python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
       steps:
         - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
         - name: Clone FaceSDK
           uses: actions/checkout@v4
           with:
-            repository: https://github.com/3DiVi/face-sdk
+            repository: 3DiVi/face-sdk
             path: FaceSDK
 
         - name: Install Python

@@ -69,7 +69,6 @@ jobs:
           run: pip install build
 
         - name: Build
-          shell: cmd
           run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python -m build
 
         - name: Upload artifacts
@@ -108,7 +107,6 @@ jobs:
           run: pip install build
 
         - name: Build
-          shell: cmd
           run: |
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)

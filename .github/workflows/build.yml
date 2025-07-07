@@ -13,18 +13,30 @@ jobs:
       runs-on: windows-latest
       strategy:
         matrix:
-            python-versions: [8, 9, 10, 11, 12, 13]
+            python-versions: [3.8, 3.9, 3.10, 3.11, 3.12, 3.13]
 
       steps:
         - uses: actions/checkout@v4
 
+        - name: Clone FaceSDK
+          uses: actions/checkout@v4
+          with:
+            repository: https://github.com/3DiVi/face-sdk
+            path: FaceSDK
+
         - name: Install Python
           uses: actions/setup-python@v5
           with:
-            python-version: "3.${{ matrix.python-versions }}"
+            python-version: "${{ matrix.python-versions }}"
+
+        - name: Install build
+          uses: pip install build
 
         - name: Build
-          run: python -m build
+          shell: cmd
+          run: |
+              set CMAKE_ARGS=-DFACE_SDK_INCLUDE_PATH="${{ github.workspace }}\FaceSDK\include"
+              python -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4

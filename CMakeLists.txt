@@ -81,7 +81,7 @@ else()
                 DEPENDS ${PROJECT_NAME}
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 
-                COMMAND -E copy ${PYI_PATH} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pyi
+                COMMAND ${CMAKE_COMMAND} -E copy ${PYI_PATH} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pyi
             )
         endif()
     else()

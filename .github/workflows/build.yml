@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+    branches:
+        - master
+    tags:
+        - "v*"
+        
+
+jobs:
+    windows-build:
+      runs-on: windows-latest
+      strategy:
+        matrix:
+            python-versions: [8, 9, 10, 11, 12, 13]
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Install Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: "3.${{ matrix.python-versions }}"
+
+        - name: Build
+          run: python -m build
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            path: dist\*.whl
+

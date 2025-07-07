@@ -69,17 +69,18 @@ jobs:
           run: pip install build
 
         - name: Build
-          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python -m build
+          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python3 -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
           with:
             name: ${{ matrix.python-versions }}-linux
-            path: dist\*.whl
+            path: dist/*.whl
 
 
     linux-aarch64-build:
       runs-on: ubuntu-latest
+      needs: linux-build
       strategy:
         matrix:
             python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
@@ -87,10 +88,20 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
+        - name: Download pyi
+          uses: actions/download-artifact@v4
+          with:
+            name: 3.13-linux
+            path: pyi
+        
+        - name: Unzip pyi
+          working-directory: pyi
+          run: unzip $(ls) -d .
+
         - name: Install cross compiler
           run: |
               sudo apt update
-              sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu -y
+              sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
         - name: Clone FaceSDK
           uses: actions/checkout@v4
@@ -110,10 +121,10 @@ jobs:
           run: |
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)
-              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python -m build
+              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python3 -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
           with:
             name: ${{ matrix.python-versions }}-linux
-            path: dist\*.whl
+            path: dist/*.whl

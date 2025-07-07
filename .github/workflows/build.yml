@@ -113,7 +113,6 @@ jobs:
           uses: actions/setup-python@v5
           with:
             python-version: "${{ matrix.python-versions }}"
-            architecture: arm64
 
         - name: Install build
           run: pip install build
@@ -123,6 +122,21 @@ jobs:
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)
               CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python3 -m build
+
+        - name: Rename
+          working-directory: dist
+          run: |
+              rm -rf *.gz
+              export ARCHIVE=$(ls *.whl)
+              unzip ${ARCHIVE} -d .
+              find . -type f -name '*x86_64*' | while read -r file; do
+                newname="${file//x86_64/aarch64}"
+                mv "$file" "$newname"
+              done
+              export ARCHIVE=$(ls *.whl)
+              rm -rf ${ARCHIVE}
+              zip -r ${ARCHIVE} ./
+
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4

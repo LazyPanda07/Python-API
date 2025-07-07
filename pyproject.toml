@@ -3,7 +3,7 @@ requires = ["scikit-build-core[pyproject]"]
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "face_sdk"
+name = "face_sdk_3divi"
 version = "1.0.0"
 description = "A minimal example package"
 readme = "README.md"

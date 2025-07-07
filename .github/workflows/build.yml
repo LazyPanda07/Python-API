@@ -41,5 +41,81 @@ jobs:
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
           with:
+            name: ${{ matrix.python-versions }}-windows
             path: dist\*.whl
 
+
+    linux-build:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+            python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Clone FaceSDK
+          uses: actions/checkout@v4
+          with:
+            repository: 3DiVi/face-sdk
+            path: FaceSDK
+
+        - name: Install Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: "${{ matrix.python-versions }}"
+
+        - name: Install build
+          run: pip install build
+
+        - name: Build
+          shell: cmd
+          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python -m build
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ matrix.python-versions }}-linux
+            path: dist\*.whl
+
+
+    linux-aarch64-build:
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+            python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Install cross compiler
+          run: |
+              sudo apt update
+              sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu -y
+
+        - name: Clone FaceSDK
+          uses: actions/checkout@v4
+          with:
+            repository: 3DiVi/face-sdk
+            path: FaceSDK
+
+        - name: Install Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: "${{ matrix.python-versions }}"
+
+        - name: Install build
+          run: pip install build
+
+        - name: Build
+          shell: cmd
+          run: |
+              export CC=$(which aarch64-linux-gnu-gcc)
+              export CXX=$(which aarch64-linux-gnu-g++)
+              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python -m build
+
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ matrix.python-versions }}-linux
+            path: dist\*.whl

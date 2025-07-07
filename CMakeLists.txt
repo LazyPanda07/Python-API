@@ -15,10 +15,6 @@ set(FACE_SDK_INCLUDE_PATH "" CACHE STRING "Path to include directory")
 set(TARGET_ARCH "x86" CACHE STRING "Target architecture")
 set(PYI_PATH "" CACHE STRING "Path to existing *.pyi")
 
-if (${TARGET_ARCH} STREQUAL "aarch64")
-    set(CMAKE_SYSTEM_PROCESSOR aarch64)
-endif()
-
 if (NOT DEFINED ${PYTHON_MINOR_VERSION})
     execute_process(
         COMMAND ${PYTHON_EXECUTABLE} --version

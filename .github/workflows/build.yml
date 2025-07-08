@@ -13,7 +13,7 @@ jobs:
       runs-on: windows-latest
       strategy:
         matrix:
-            python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
+            python-versions: ["3.10", "3.11", "3.12", "3.13"]
 
       steps:
         - uses: actions/checkout@v4
@@ -73,11 +73,10 @@ jobs:
             python-version: "${{ matrix.python-versions }}"
 
         - name: Install build
-          run: pip install build
+          run: ${{ matrix.python-versions }} -m pip install build
 
         - name: Build
-          shell: bash
-          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python3 -m build
+          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" ${{ matrix.python-versions }} -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
@@ -116,7 +115,6 @@ jobs:
             path: pyi
         
         - name: Unzip pyi
-          shell: bash
           working-directory: pyi
           run: unzip $(ls) -d .
 
@@ -126,14 +124,13 @@ jobs:
             python-version: "${{ matrix.python-versions }}"
 
         - name: Install build
-          run: pip install build
+          run: ${{ matrix.python-versions }} -m pip install build
 
         - name: Build
-          shell: bash
           run: |
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)
-              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python3 -m build
+              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" ${{ matrix.python-versions }} -m build
 
         - name: Rename
           shell: bash

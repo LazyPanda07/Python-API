@@ -59,13 +59,11 @@ jobs:
               apt update
               apt install -y gcc g++ cmake git unzip zip wget
 
-        - uses: actions/checkout@v3
+        - name: Clone repository
+          run: git clone https://github.com/${GITHUB_REPOSITORY}
 
         - name: Clone FaceSDK
-          uses: actions/checkout@v3
-          with:
-            repository: 3DiVi/face-sdk
-            path: FaceSDK
+          run: git clone https://github.com/3DiVi/face-sdk FaceSDK
 
         - name: Install Python
           uses: actions/setup-python@v5
@@ -101,7 +99,11 @@ jobs:
               apt update
               apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git unzip zip wget
 
-        - uses: actions/checkout@v3
+        - name: Clone repository
+          run: git clone https://github.com/${GITHUB_REPOSITORY}
+
+        - name: Clone FaceSDK
+          run: git clone https://github.com/3DiVi/face-sdk FaceSDK
 
         - name: Download pyi
           uses: actions/download-artifact@v4
@@ -113,12 +115,6 @@ jobs:
           shell: bash
           working-directory: pyi
           run: unzip $(ls) -d .
-
-        - name: Clone FaceSDK
-          uses: actions/checkout@v3
-          with:
-            repository: 3DiVi/face-sdk
-            path: FaceSDK
 
         - name: Install Python
           uses: actions/setup-python@v5

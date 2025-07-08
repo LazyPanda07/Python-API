@@ -47,11 +47,18 @@ jobs:
 
     linux-build:
       runs-on: ubuntu-latest
+      container:
+        image: ubuntu:18.04
       strategy:
         matrix:
             python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
       steps:
+        - name: Install dependencies
+          run: |
+              sudo apt update
+              sudo apt install -y gcc g++ cmake git unzip zip wget
+
         - uses: actions/checkout@v4
 
         - name: Clone FaceSDK
@@ -81,11 +88,18 @@ jobs:
     linux-aarch64-build:
       runs-on: ubuntu-latest
       needs: linux-build
+      container:
+        image: ubuntu:18.04
       strategy:
         matrix:
             python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
       steps:
+        - name: Install dependencies
+          run: |
+              sudo apt update
+              sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git unzip zip wget
+
         - uses: actions/checkout@v4
 
         - name: Download pyi
@@ -97,11 +111,6 @@ jobs:
         - name: Unzip pyi
           working-directory: pyi
           run: unzip $(ls) -d .
-
-        - name: Install cross compiler
-          run: |
-              sudo apt update
-              sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
         - name: Clone FaceSDK
           uses: actions/checkout@v4

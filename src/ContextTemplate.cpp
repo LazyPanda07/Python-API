@@ -26,7 +26,7 @@ public:
     }
 };
 
-namespace face_sdk
+namespace face_sdk_3divi
 {
     ContextTemplate::ContextTemplate(pbio::ContextTemplate::Ptr implementation) :
         implementation(implementation)

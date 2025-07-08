@@ -24,6 +24,14 @@ jobs:
             repository: 3DiVi/face-sdk
             path: FaceSDK
 
+        - name: Remove other files from FaceSDK
+          shell: bash
+          working-directory: FaceSDK
+          run: |
+              mv include ../
+              rm -rf *
+              mv ../include .
+
         - name: Install Python
           uses: actions/setup-python@v5
           with:
@@ -34,9 +42,7 @@ jobs:
 
         - name: Build
           shell: cmd
-          run: |
-              set CMAKE_ARGS=-DFACE_SDK_INCLUDE_PATH="${{ github.workspace }}\FaceSDK\include"
-              python -m build
+          run: python -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
@@ -56,6 +62,14 @@ jobs:
           with:
             repository: 3DiVi/face-sdk
             path: FaceSDK
+
+        - name: Remove other files from FaceSDK
+          shell: bash
+          working-directory: FaceSDK
+          run: |
+              mv include ../
+              rm -rf *
+              mv ../include .
 
         - name: Install build
           run: pip install build

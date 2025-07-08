@@ -14,8 +14,3 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
-[tool.scikit-build]
-sdist.include = [
-  "FaceSDK/include/*.h"
-]

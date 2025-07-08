@@ -28,9 +28,9 @@ jobs:
           shell: bash
           working-directory: FaceSDK
           run: |
-              mv include ../
+              mv include ../includeFaceSDK
               rm -rf *
-              mv ../include .
+              mv ../includeFaceSDK ./include
 
         - name: Install Python
           uses: actions/setup-python@v5
@@ -67,9 +67,9 @@ jobs:
           shell: bash
           working-directory: FaceSDK
           run: |
-              mv include ../
+              mv include ../includeFaceSDK
               rm -rf *
-              mv ../include .
+              mv ../includeFaceSDK ./include
 
         - name: Install build
           run: pip install build

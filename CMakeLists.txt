@@ -11,9 +11,7 @@ else()
 
     set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE} CACHE STRING "Path to Python executable")
 endif()
-set(FACE_SDK_INCLUDE_PATH "" CACHE STRING "Path to include directory")
-set(TARGET_ARCH "x86" CACHE STRING "Target architecture")
-set(PYI_PATH "" CACHE STRING "Path to existing *.pyi")
+set(FACE_SDK_INCLUDE_PATH "FaceSDK/include" CACHE STRING "Path to include directory")
 
 if (NOT DEFINED ${PYTHON_MINOR_VERSION})
     execute_process(
@@ -63,27 +61,17 @@ if (DEFINED CUSTOM_INSTALL_PATH)
     install(TARGETS ${PROJECT_NAME} DESTINATION ${CUSTOM_INSTALL_PATH})
 else()
     if (UNIX)
-        if (${TARGET_ARCH} STREQUAL "x86")
-            add_custom_target(
-                generate_pyi ALL
-                DEPENDS ${PROJECT_NAME}
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        add_custom_target(
+            generate_pyi ALL
+            DEPENDS ${PROJECT_NAME}
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 
-                COMMAND ${PYTHON_EXECUTABLE} -m venv .venv
-                COMMAND .venv/bin/python -m pip install pybind11-stubgen
-                COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/*.so ${CMAKE_BINARY_DIR}/.venv/lib/python3.${PYTHON_MINOR_VERSION}/site-packages
-                COMMAND ${CMAKE_BINARY_DIR}/.venv/bin/pybind11-stubgen -o ${CMAKE_BINARY_DIR} ${PROJECT_NAME}
-                COMMAND ${CMAKE_COMMAND} -E rm -rf .venv
-            )
-        else()
-            add_custom_target(
-                generate_pyi ALL
-                DEPENDS ${PROJECT_NAME}
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-
-                COMMAND ${CMAKE_COMMAND} -E copy ${PYI_PATH} ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.pyi
-            )
-        endif()
+            COMMAND ${PYTHON_EXECUTABLE} -m venv .venv
+            COMMAND .venv/bin/python -m pip install pybind11-stubgen
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/*.so ${CMAKE_BINARY_DIR}/.venv/lib/python3.${PYTHON_MINOR_VERSION}/site-packages
+            COMMAND ${CMAKE_BINARY_DIR}/.venv/bin/pybind11-stubgen -o ${CMAKE_BINARY_DIR} ${PROJECT_NAME}
+            COMMAND ${CMAKE_COMMAND} -E rm -rf .venv
+        )
     else()
         add_custom_target(
             generate_pyi ALL

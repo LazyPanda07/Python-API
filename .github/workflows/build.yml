@@ -13,7 +13,7 @@ jobs:
       runs-on: windows-latest
       strategy:
         matrix:
-            python-versions: ["3.10", "3.11", "3.12", "3.13"]
+            python-versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
       steps:
         - uses: actions/checkout@v4
@@ -47,18 +47,8 @@ jobs:
 
     linux-build:
       runs-on: ubuntu-latest
-      container:
-        image: ubuntu:22.04
-      strategy:
-        matrix:
-            python-versions: ["3.10", "3.11", "3.12", "3.13"]
 
       steps:
-        - name: Install dependencies
-          run: |
-              apt update
-              apt install -y gcc g++ cmake git unzip zip wget
-
         - uses: actions/checkout@v4
 
         - name: Clone FaceSDK
@@ -67,89 +57,14 @@ jobs:
             repository: 3DiVi/face-sdk
             path: FaceSDK
 
-        - name: Install Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: "${{ matrix.python-versions }}"
-
         - name: Install build
-          run: python${{ matrix.python-versions }} -m pip install build
+          run: pip install build
 
         - name: Build
-          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python${{ matrix.python-versions }} -m build
+          run: python3 -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
           with:
-            name: ${{ matrix.python-versions }}-linux
-            path: dist/*.whl
-
-
-    linux-aarch64-build:
-      runs-on: ubuntu-latest
-      needs: linux-build
-      container:
-        image: ubuntu:22.04
-      strategy:
-        matrix:
-            python-versions: ["3.10", "3.11", "3.12", "3.13"]
-
-      steps:
-        - name: Install dependencies
-          run: |
-              apt update
-              apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git unzip zip wget
-
-        - uses: actions/checkout@v4
-
-        - name: Clone FaceSDK
-          uses: actions/checkout@v4
-          with:
-            repository: 3DiVi/face-sdk
-            path: FaceSDK
-
-        - name: Download pyi
-          uses: actions/download-artifact@v4
-          with:
-            name: 3.13-linux
-            path: pyi
-        
-        - name: Unzip pyi
-          working-directory: pyi
-          run: unzip $(ls) -d .
-
-        - name: Install Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: "${{ matrix.python-versions }}"
-
-        - name: Install build
-          run: python${{ matrix.python-versions }} -m pip install build
-
-        - name: Build
-          run: |
-              export CC=$(which aarch64-linux-gnu-gcc)
-              export CXX=$(which aarch64-linux-gnu-g++)
-              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python${{ matrix.python-versions }} -m build
-
-        - name: Rename
-          shell: bash
-          working-directory: dist
-          run: |
-              rm -rf *.gz
-              export ARCHIVE=$(ls *.whl)
-              unzip ${ARCHIVE} -d .
-              find . -type f -name '*x86_64*' | while read -r file; do
-                newname="${file//x86_64/aarch64}"
-                mv "$file" "$newname"
-              done
-              export ARCHIVE=$(ls *.whl)
-              rm -rf ${ARCHIVE}
-              zip -r ${ARCHIVE} ./
-
-
-        - name: Upload artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: ${{ matrix.python-versions }}-linux-aarch64
-            path: dist/*.whl
+            name: linux
+            path: dist/*.tar.gz

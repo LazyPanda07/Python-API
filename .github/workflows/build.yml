@@ -73,10 +73,10 @@ jobs:
             python-version: "${{ matrix.python-versions }}"
 
         - name: Install build
-          run: ${{ matrix.python-versions }} -m pip install build
+          run: python${{ matrix.python-versions }} -m pip install build
 
         - name: Build
-          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" ${{ matrix.python-versions }} -m build
+          run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python${{ matrix.python-versions }} -m build
 
         - name: Upload artifacts
           uses: actions/upload-artifact@v4
@@ -124,13 +124,13 @@ jobs:
             python-version: "${{ matrix.python-versions }}"
 
         - name: Install build
-          run: ${{ matrix.python-versions }} -m pip install build
+          run: python${{ matrix.python-versions }} -m pip install build
 
         - name: Build
           run: |
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)
-              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" ${{ matrix.python-versions }} -m build
+              CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python${{ matrix.python-versions }} -m build
 
         - name: Rename
           shell: bash

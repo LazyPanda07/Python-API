@@ -59,10 +59,10 @@ jobs:
               apt update
               apt install -y gcc g++ cmake git unzip zip wget
 
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v3
 
         - name: Clone FaceSDK
-          uses: actions/checkout@v4
+          uses: actions/checkout@v3
           with:
             repository: 3DiVi/face-sdk
             path: FaceSDK
@@ -76,6 +76,7 @@ jobs:
           run: pip install build
 
         - name: Build
+          shell: bash
           run: CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include" python3 -m build
 
         - name: Upload artifacts
@@ -100,7 +101,7 @@ jobs:
               apt update
               apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake git unzip zip wget
 
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v3
 
         - name: Download pyi
           uses: actions/download-artifact@v4
@@ -109,11 +110,12 @@ jobs:
             path: pyi
         
         - name: Unzip pyi
+          shell: bash
           working-directory: pyi
           run: unzip $(ls) -d .
 
         - name: Clone FaceSDK
-          uses: actions/checkout@v4
+          uses: actions/checkout@v3
           with:
             repository: 3DiVi/face-sdk
             path: FaceSDK
@@ -127,12 +129,14 @@ jobs:
           run: pip install build
 
         - name: Build
+          shell: bash
           run: |
               export CC=$(which aarch64-linux-gnu-gcc)
               export CXX=$(which aarch64-linux-gnu-g++)
               CMAKE_ARGS="-DFACE_SDK_INCLUDE_PATH=${{ github.workspace }}/FaceSDK/include -DTARGET_ARCH=aarch64 -DPYI_PATH=${{ github.workspace }}/pyi/face_sdk_3divi.pyi" python3 -m build
 
         - name: Rename
+          shell: bash
           working-directory: dist
           run: |
               rm -rf *.gz

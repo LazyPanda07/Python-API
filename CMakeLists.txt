@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(PYBIND11_TAG v2.13.6)
+set(PYBIND11_TAG v3.0.0)
 
 if (UNIX)
     set(PYTHON_EXECUTABLE /usr/bin/python3 CACHE STRING "Path to Python executable")
